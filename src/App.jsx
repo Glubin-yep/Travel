@@ -3,13 +3,14 @@ import "./App.css";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet-routing-machine";
-import { FaInfoCircle, FaRedo } from "react-icons/fa"; // Іконки з FontAwesome
+import { FaQuestionCircle, FaInfoCircle, FaRedo } from "react-icons/fa"; // Іконки з FontAwesome
 import { CiCalculator1 } from "react-icons/ci";
 
 function App() {
   const [departure, setDeparture] = useState("");
   const [arrival, setArrival] = useState("");
   const [routeInfo, setRouteInfo] = useState("");
+  const [showHelp, setShowHelp] = useState(false); // Стан для модального вікна
 
   // Міста з їхніми координатами
   const cities = {
@@ -27,6 +28,10 @@ function App() {
     Суми: [50.9077, 34.7991],
     Хмельницький: [49.4196, 27.0005],
     Київ: [50.4501, 30.5234],
+  };
+
+  const toggleHelpModal = () => {
+    setShowHelp(!showHelp);
   };
 
   const handleRouteCalculation = () => {
@@ -128,6 +133,75 @@ function App() {
 
   return (
     <div className="App">
+      {showHelp && (
+        <div className="help-modal">
+          <div className="help-content">
+            <h3>Довідка</h3>
+            <p>
+              <strong>Як користуватися програмою:</strong>
+            </p>
+            <ol>
+              <li>
+                <strong>Виберіть міста відправлення та прибуття:</strong>
+                <ul>
+                  <li>
+                    У верхній частині екрана є два випадаючі списки. Перший
+                    список — це
+                    <em>Місце вибуття</em>. Виберіть місто, з якого ви хочете
+                    почати маршрут.
+                  </li>
+                  <li>
+                    Другий список — це <em>Місце прибуття</em>. Виберіть місто,
+                    до якого ви хочете прокласти маршрут.
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <strong>Розрахунок маршруту:</strong>
+                Після вибору міст натисніть кнопку{" "}
+                <em>"Розрахувати маршрут"</em>. На карті буде відображено
+                прокладений маршрут між обраними містами, а також з’являться
+                маркери початку та кінця маршруту.
+              </li>
+              <li>
+                <strong>Очистка вибору:</strong>
+                Якщо ви хочете почати заново, натисніть кнопку{" "}
+                <em>"Очистити вибір"</em>. Всі ваші налаштування буде скинуто.
+              </li>
+              <li>
+                <strong>Огляд маршруту на карті:</strong>
+                Прокручуючи карту або змінюючи масштаб, ви можете детально
+                переглянути маршрут, включаючи всі повороти та орієнтири.
+              </li>
+              <li>
+                <strong>Інтерактивний маршрут:</strong>
+                Ви можете перетягувати маршрут безпосередньо на карті, щоб
+                змінити його або уточнити, якщо це потрібно.
+              </li>
+              <li>
+                <strong>Що робити, якщо міста збігаються:</strong>
+                Якщо ви обрали однакові міста для відправлення та прибуття,
+                програма запропонує змінити вибір, оскільки маршрут у такому
+                випадку неможливо прокласти.
+              </li>
+            </ol>
+            <p>
+              <strong>Додаткова інформація:</strong>
+              Маршрут розраховується автоматично, включаючи оптимальні дороги
+              для автомобілів. Ви також можете використовувати карту для інших
+              маніпуляцій, наприклад переглядати інші міста або регіони.
+            </p>
+            <p>
+              <strong>Поради:</strong>
+              Якщо карта не відображається правильно, спробуйте оновити сторінку
+              або перевірте інтернет-з’єднання. Для більшої зручності
+              використовуйте програму на повноекранному режимі.
+            </p>
+            <button onClick={toggleHelpModal}>Закрити</button>
+          </div>
+        </div>
+      )}
+
       <div className="form-container">
         <h2>Планування маршруту</h2>
         <label>Місце вибуття:</label>
@@ -173,6 +247,9 @@ function App() {
             відображений з початковими та кінцевими маркерами.
           </p>
         </div>
+        <button onClick={toggleHelpModal}>
+          <FaQuestionCircle /> Довідка
+        </button>
       </div>
 
       <div className="map-container">
